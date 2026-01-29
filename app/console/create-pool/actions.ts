@@ -93,14 +93,14 @@ export async function createPool(formData: FormData) {
   const {data:conversationParticipant ,error:conversationParticipantError} = await supabase.from("conversation_participants").insert({
     conversation_id:conversation[0].id,
     user_id:userData.user.id,
-  }).select();
+  }).select("*");
 
   if(conversationParticipantError){
     console.error("Error creating conversation participant:", conversationParticipantError);
     throw new Error("Failed to create conversation participant");
   }
 
-  console.log("conversationParticipant",conversationParticipant)
+  console.log(conversationParticipant)
 
    redirect("/console/browse");
 }

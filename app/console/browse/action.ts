@@ -51,7 +51,7 @@ export async function joinPool(post_id: string) {
    const {data:conversationParticipant,error:conversationParticipantError} = await supabase.from("conversation_participants").insert({
     conversation_id:conversation.id,
     user_id:member_id,
-   })
+   }).select("*")
    console.log("conversation participant data",conversationParticipant)
    if(conversationParticipantError){
     return {
@@ -64,5 +64,4 @@ export async function joinPool(post_id: string) {
     message:"Joined pool successfully",
     data:memberData
    }
-   
 }

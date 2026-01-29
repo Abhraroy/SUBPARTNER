@@ -21,6 +21,9 @@ export default function JoiningPage({ post, onClose }: JoiningPageProps) {
     console.log("clicked");
     const res = await joinPool(post.id);
     console.log(res);
+    if(res.success){
+      onClose();
+    }
   }
 
   return (
