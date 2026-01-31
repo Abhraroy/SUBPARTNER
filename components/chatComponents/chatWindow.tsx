@@ -62,6 +62,8 @@ export default function ChatWindow(props: ChatWindowProps) {
     fetchChat();
   }, [conversation_id]);
 
+  
+
   useEffect(() => {
     if (!conversation_id) return;
     const channel = supabase
@@ -117,8 +119,8 @@ export default function ChatWindow(props: ChatWindowProps) {
     );
   }
 
-  return (
-    <div className={`h-full w-full flex flex-col ${className}`}>
+    return (
+     <div className={`h-full w-full min-h-0 flex flex-col ${className}`}>
       <div className="w-full border-b p-4 flex flex-row gap-2 items-center justify-start  ">
         {onBack && (
           <button
@@ -151,14 +153,14 @@ export default function ChatWindow(props: ChatWindowProps) {
         ))}
       </div>}
 
-      <div className="flex-1 overflow-auto flex flex-col gap-2  justify-end p-2 md:p-16 ">
+       <div className=" bg-red-500 min-h-0 overflow-y-auto flex flex-col gap-2 justify-end p-2 md:p-16">
         {chatList?.map((item: any, index: number) => (
           <div
             key={index}
             className={
               item.sender_id === user
-                ? "w-full flex flex-row items-end justify-end"
-                : "w-full flex flex-row items-start justify-start"
+                ? "w-full flex flex-row items-end justify-end shrink-0"
+                : "w-full flex flex-row items-start justify-start shrink-0"
             }
           >
             <div className=" w-fit p-2 h-fit flex flex-col gap-1.5 items-center justify-start rounded-md border-2 border-[#DFFF00]/50 ">

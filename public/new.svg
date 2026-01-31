@@ -1,0 +1,30 @@
+<svg width="500" height="600" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#26C6DA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1565C0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <circle cx="250" cy="220" r="180" fill="none" stroke="url(#brandGradient)" stroke-width="12" />
+
+  <g fill="url(#brandGradient)">
+    <circle cx="250" cy="110" r="25" />
+    <path d="M200 160 Q250 140 300 160 Q280 190 250 190 Q220 190 200 160 Z" />
+    
+    <circle cx="140" cy="240" r="25" />
+    <path d="M100 290 Q130 260 160 250 Q180 290 150 310 Q120 320 100 290 Z" />
+    
+    <circle cx="360" cy="240" r="25" />
+    <path d="M400 290 Q370 260 340 250 Q320 290 350 310 Q380 320 400 290 Z" />
+  </g>
+
+  <path d="M250 180 C250 180 210 240 210 270 A40 40 0 1 0 290 270 C290 240 250 180 250 180 Z" 
+        fill="url(#brandGradient)" />
+  
+  <path d="M180 340 Q250 370 320 340" fill="none" stroke="url(#brandGradient)" stroke-width="4" stroke-linecap="round" opacity="0.6" />
+  <path d="M200 365 Q250 385 300 365" fill="none" stroke="url(#brandGradient)" stroke-width="3" stroke-linecap="round" opacity="0.4" />
+
+  <text x="50%" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="72" fill="#1565C0">PoolIt</text>
+  <text x="50%" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#555" letter-spacing="2">DIVE INTO SAVINGS</text>
+</svg>
