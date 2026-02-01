@@ -62,3 +62,15 @@ body {
   cursor: pointer;
 }
 
+
+.custom-scrollbar::-webkit-scrollbar {
+  scrollbar-width: thin;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #5e5e5e32;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+}
+
+

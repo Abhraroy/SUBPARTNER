@@ -1,6 +1,12 @@
 "use client";
 import { useChatStore } from "@/lib/zustand/chatStore";
-import { ArrowLeft, MessageSquareDashed, Users, User, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  MessageSquareDashed,
+  Users,
+  User,
+  Loader2,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState, useRef } from "react";
 import { useAuthStore } from "@/lib/zustand/AuthStore";
@@ -14,11 +20,15 @@ export default function ChatWindow(props: ChatWindowProps) {
   const { onBack, className = "" } = props;
   const { conversation_id, conversation_name, conversation_type } =
     useChatStore();
+
   const { user, setUser } = useAuthStore();
   const [chatList, setChatList] = useState<any[]>([]);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const [conversation_members, setConversationMembers] = useState<any[]>([]);
+  const [uniqueDatearr, setUniqueDatearr] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const ref = useRef<any>(null);
+  const scrollref = useRef<any>(null);
   const supabase = createClient();
   const fetchUser = async () => {
     const { data, error } = await supabase.auth.getUser();
@@ -57,12 +67,23 @@ export default function ChatWindow(props: ChatWindowProps) {
       console.log(data);
       if (data) {
         setChatList(data);
+        setHasScrolled((prev) => !prev);
       }
     };
     fetchChat();
   }, [conversation_id]);
 
-  
+  useEffect(() => {
+    const uniqueTimes = [
+      ...new Set(
+        chatList.map((item) =>
+          new Date(item.created_at).toISOString().substring(0, 10),
+        ),
+      ),
+    ];
+    setUniqueDatearr(uniqueTimes);
+    console.log("all the unique dates", uniqueTimes);
+  }, [chatList]);
 
   useEffect(() => {
     if (!conversation_id) return;
@@ -79,6 +100,9 @@ export default function ChatWindow(props: ChatWindowProps) {
         (payload) => {
           console.log(payload);
           setChatList((prev) => [...prev, payload.new]);
+          if (payload.new.sender_id !== user) {
+            setHasScrolled((prev) => !prev);
+          }
         },
       )
       .subscribe();
@@ -87,6 +111,18 @@ export default function ChatWindow(props: ChatWindowProps) {
       channel.unsubscribe();
     };
   }, [conversation_id]);
+
+  // useEffect(() => {
+  //   if (scrollref.current) {
+  //     scrollref.current.scrollTop = scrollref.current.scrollHeight;
+  //   }
+  // }, [loading]);
+
+  useEffect(() => {
+    if (scrollref.current) {
+      scrollref.current.scrollTop = scrollref.current.scrollHeight;
+    }
+  }, [hasScrolled]);
 
   const sendMessage = async (e: any) => {
     setLoading(true);
@@ -119,8 +155,8 @@ export default function ChatWindow(props: ChatWindowProps) {
     );
   }
 
-    return (
-     <div className={`h-full w-full min-h-0 flex flex-col ${className}`}>
+  return (
+    <div className={`h-full w-full min-h-0 flex flex-col ${className}`}>
       <div className="w-full border-b p-4 flex flex-row gap-2 items-center justify-start  ">
         {onBack && (
           <button
@@ -140,47 +176,73 @@ export default function ChatWindow(props: ChatWindowProps) {
         <h2 className="font-bold text-lg">{conversation_name}</h2>
       </div>
 
-      {conversation_type === "group" && <div className="w-full border-b p-4 flex flex-row items-start justify-start  ">
-        {conversation_members?.map((item: any, index: number) => (
-          <div key={index} className="flex flex-row gap-1">
-            {item.profiles.user_id === user ? (
-              <p className="text-white">You</p>
-            ) : (
-              <p className="text-white">{item.profiles?.name}</p>
-            )}
-            <span>{index < conversation_members.length - 1 && ", "}</span>
-          </div>
-        ))}
-      </div>}
-
-       <div className=" bg-red-500 min-h-0 overflow-y-auto flex flex-col gap-2 justify-end p-2 md:p-16">
-        {chatList?.map((item: any, index: number) => (
-          <div
-            key={index}
-            className={
-              item.sender_id === user
-                ? "w-full flex flex-row items-end justify-end shrink-0"
-                : "w-full flex flex-row items-start justify-start shrink-0"
-            }
-          >
-            <div className=" w-fit p-2 h-fit flex flex-col gap-1.5 items-center justify-start rounded-md border-2 border-[#DFFF00]/50 ">
-              {conversation_type === "group" ? (
-                <>
-                  {item.sender_id === user ? (
-                    <p className="text-white font-semibold text-left">You</p>
-                  ) : (
-                    <p className="text-white font-semibold text-left">
-                      {item.profiles?.name}
-                    </p>
-                  )}
-                  <p className="text-white">{item.content}</p>
-                </>
+      {conversation_type === "group" && (
+        <div className="w-full border-b p-4 flex flex-row items-start justify-start  ">
+          {conversation_members?.map((item: any, index: number) => (
+            <div key={index} className="flex flex-row gap-1">
+              {item.profiles.user_id === user ? (
+                <p className="text-white">You</p>
               ) : (
-                <p className="text-white">{item.content}</p>
+                <p className="text-white">{item.profiles?.name}</p>
               )}
+              <span>{index < conversation_members.length - 1 && ", "}</span>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
+
+      <div className="flex-1 min-h-0  flex flex-col gap-2 justify-end">
+        <div ref={scrollref} className=" min-h-0 overflow-y-auto flex flex-col gap-10  p-4 md:p-16 h-full custom-scrollbar shrink-0">
+          {chatList?.map((item: any, index: number) => (
+            <div className="flex flex-col gap-6" key={index}>
+              <div className="w-full h-fit flex items-center justify-center ">
+                {uniqueDatearr[index] && (
+                  <p className="text-black font-semibold bg-[#DFFF00]/90 pt-1 pb-1 px-2 rounded-md ">
+                    {uniqueDatearr[index] ===
+                    new Date().toLocaleDateString("en-CA")
+                      ? "Today"
+                      : uniqueDatearr[index]}
+                  </p>
+                )}
+              </div>
+              <div
+                key={index}
+                className={
+                  item.sender_id === user
+                    ? "w-full flex flex-row items-end justify-end shrink-0"
+                    : "w-full flex flex-row items-start justify-start shrink-0"
+                }
+              >
+                <div className=" w-fit p-2 h-fit flex flex-col gap-1.5 items-center justify-start rounded-md border-2 border-[#DFFF00]/50 ">
+                  {conversation_type === "group" ? (
+                    <>
+                      {item.sender_id === user ? (
+                        <p className="text-white font-semibold text-left">
+                          You
+                        </p>
+                      ) : (
+                        <p className="text-white font-semibold text-left self-start ">
+                          {item.profiles?.name}
+                        </p>
+                      )}
+                      <p className="text-white self-center ">{item.content}</p>
+                      <p className="text-white self-end">
+                        {item.created_at.slice(11, 16)}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-white">{item.content}</p>
+                      <p className="text-white self-end">
+                        {item.created_at.slice(11, 16)}
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="w-full border-t p-4 flex flex-row gap-2 items-center justify-start  ">
         <form
@@ -193,7 +255,10 @@ export default function ChatWindow(props: ChatWindowProps) {
             placeholder="Type your message"
             className="w-full border-2 border-[#DFFF00] rounded-md p-2"
           />
-          <button disabled={loading} className="bg-[#DFFF00] text-black font-bold py-2 px-4 rounded-md">
+          <button
+            disabled={loading}
+            className="bg-[#DFFF00] text-black font-bold py-2 px-4 rounded-md"
+          >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send"}
           </button>
         </form>
