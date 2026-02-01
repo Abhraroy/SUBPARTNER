@@ -100,7 +100,7 @@ export default function ChatWindow(props: ChatWindowProps) {
         (payload) => {
           console.log(payload);
           setChatList((prev) => [...prev, payload.new]);
-          if (payload.new.sender_id !== user) {
+          if (payload.new.sender_id === user) {
             setHasScrolled((prev) => !prev);
           }
         },
@@ -192,56 +192,91 @@ export default function ChatWindow(props: ChatWindowProps) {
       )}
 
       <div className="flex-1 min-h-0  flex flex-col gap-2 justify-end">
-        <div ref={scrollref} className=" min-h-0 overflow-y-auto flex flex-col gap-10  p-4 md:p-16 h-full custom-scrollbar shrink-0">
-          {chatList?.map((item: any, index: number) => (
-            <div className="flex flex-col gap-6" key={index}>
-              <div className="w-full h-fit flex items-center justify-center ">
-                {uniqueDatearr[index] && (
-                  <p className="text-black font-semibold bg-[#DFFF00]/90 pt-1 pb-1 px-2 rounded-md ">
-                    {uniqueDatearr[index] ===
-                    new Date().toLocaleDateString("en-CA")
-                      ? "Today"
-                      : uniqueDatearr[index]}
-                  </p>
-                )}
-              </div>
-              <div
-                key={index}
-                className={
-                  item.sender_id === user
-                    ? "w-full flex flex-row items-end justify-end shrink-0"
-                    : "w-full flex flex-row items-start justify-start shrink-0"
-                }
-              >
-                <div className=" w-fit p-2 h-fit flex flex-col gap-1.5 items-center justify-start rounded-md border-2 border-[#DFFF00]/50 ">
-                  {conversation_type === "group" ? (
-                    <>
-                      {item.sender_id === user ? (
-                        <p className="text-white font-semibold text-left">
-                          You
-                        </p>
-                      ) : (
-                        <p className="text-white font-semibold text-left self-start ">
-                          {item.profiles?.name}
-                        </p>
-                      )}
-                      <p className="text-white self-center ">{item.content}</p>
-                      <p className="text-white self-end">
-                        {item.created_at.slice(11, 16)}
+        <div
+          ref={scrollref}
+          className=" min-h-0 overflow-y-auto flex flex-col gap-10  p-4 md:p-16 h-full custom-scrollbar shrink-0"
+        >
+          {chatList?.map((item: any, index: number) => {
+            const currentDate = new Date(item.created_at)
+              .toLocaleDateString("en-CA")
+              .substring(0, 10);
+
+            const previousDate =
+              index > 0
+                ? new Date(chatList[index - 1].created_at)
+                  .toLocaleDateString("en-CA")
+                  
+                  .substring(0, 10)
+                : null;
+            console.log("item", item.created_at);
+            console.log("currentDate", currentDate);
+            console.log("previousDate", previousDate);
+            console.log(new Date().toLocaleDateString("en-CA"));
+
+            const showDate = index === 0 || currentDate !== previousDate;
+            return (
+              <div className="flex flex-col gap-6" key={index}>
+                <div className="w-full h-fit flex items-center justify-center ">
+                  {showDate && (
+                    <div className="w-full flex justify-center">
+                      <p className="text-black font-semibold bg-[#DFFF00]/90 px-2 py-1 rounded-md">
+                        {currentDate === new Date().toLocaleDateString("en-CA")
+                          ? "Today"
+                          : currentDate}
                       </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-white">{item.content}</p>
-                      <p className="text-white self-end">
-                        {item.created_at.slice(11, 16)}
-                      </p>
-                    </>
+                    </div>
                   )}
                 </div>
+                <div
+                  key={index}
+                  className={
+                    item.sender_id === user
+                      ? "w-full flex flex-row items-end justify-end shrink-0"
+                      : "w-full flex flex-row items-start justify-start shrink-0"
+                  }
+                >
+                  <div className=" w-fit p-2 h-fit flex flex-col gap-1.5 items-center justify-start rounded-md border-2 border-[#DFFF00]/50 ">
+                    {conversation_type === "group" ? (
+                      <>
+                        {item.sender_id === user ? (
+                          <p className="text-white font-semibold text-left">
+                            You
+                          </p>
+                        ) : (
+                          <p className="text-white font-semibold text-left self-start ">
+                            {item.profiles?.name}
+                          </p>
+                        )}
+                        <p className="text-white self-center ">
+                          {item.content}
+                        </p>
+                        <div className="text-white self-end flex flex-row gap-2">
+                          <span>{new Date(item.created_at)
+                            .toLocaleTimeString()
+                            .slice(0,4)}</span>
+                          <span>{new Date(item.created_at)
+                            .toLocaleTimeString()
+                            .slice(8,11)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-white">{item.content}</p>
+                        <div className="text-white self-end flex flex-row gap-2">
+                          <span>{new Date(item.created_at)
+                            .toLocaleTimeString()
+                            .slice(0, 4)}</span>
+                          <span>{new Date(item.created_at)
+                            .toLocaleTimeString()
+                            .slice(8, 11)}</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <div className="w-full border-t p-4 flex flex-row gap-2 items-center justify-start  ">
