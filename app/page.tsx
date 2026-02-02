@@ -15,7 +15,7 @@ export default async function Home() {
   console.log(user, error);
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#DFFF00] selection:text-black">
+    <main className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#DFFF00] selection:text-black ">
       <LandingNavbar user={user} />
       <HeroSection />
       <StatsSection />

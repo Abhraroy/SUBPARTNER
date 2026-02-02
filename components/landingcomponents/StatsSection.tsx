@@ -1,39 +1,49 @@
+// Redesigned to be the "footer" of the hero area
+import { MessageSquare, Spline, ShieldCheck } from "lucide-react";
+
 export default function StatsSection() {
   return (
-    <section className="w-full border-b border-white/10 relative">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-          {/* Stat 1 */}
-          <div className="py-12 md:px-8">
-            <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1 h-3 bg-[#DFFF00]"></span>
-              System Uptime
+    <section className="w-full border-b border-white/20 bg-[#0a0a0a]">
+      <div className="mx-auto max-w-[1920px] grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/20">
+        {/* Feature 1 */}
+        <div className="flex items-start gap-4 p-8 md:p-12 hover:bg-white/5 transition-colors group">
+          <MessageSquare className="w-8 h-8 text-white group-hover:text-[#DFFF00] transition-colors" />
+          <div>
+            <h3 className="text-xl font-black uppercase text-white mb-2">
+              Messaging
+            </h3>
+            <p className="text-sm font-mono text-gray-500">
+              Coordinate with your pool members effortlessly through our
+              built-in secure chat interface.
             </p>
-            <h2 className="text-4xl md:text-5xl font-black text-white">
-              99.9<span className="text-[#DFFF00] text-2xl">%</span>
-            </h2>
           </div>
+        </div>
 
-          {/* Stat 2 */}
-          <div className="py-12 md:px-8">
-            <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1 h-3 bg-[#DFFF00]"></span>
-              Total Saved
+        {/* Feature 2 */}
+        <div className="flex items-start gap-4 p-8 md:p-12 hover:bg-white/5 transition-colors group">
+          <Spline className="w-8 h-8 text-white group-hover:text-[#DFFF00] transition-colors" />
+          <div>
+            <h3 className="text-xl font-black uppercase text-white mb-2">
+              Auto-Split
+            </h3>
+            <p className="text-sm font-mono text-gray-500">
+              Forget manual calculations. Our system handles the math and
+              distribution of funds every month.
             </p>
-            <h2 className="text-4xl md:text-5xl font-black text-white">
-              $500K<span className="text-[#DFFF00] text-2xl">+</span>
-            </h2>
           </div>
+        </div>
 
-          {/* Stat 3 */}
-          <div className="py-12 md:px-8">
-            <p className="text-white/40 font-mono text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1 h-3 bg-[#DFFF00]"></span>
-              Verified Hosts
+        {/* Feature 3 */}
+        <div className="flex items-start gap-4 p-8 md:p-12 hover:bg-white/5 transition-colors group">
+          <ShieldCheck className="w-8 h-8 text-white group-hover:text-[#DFFF00] transition-colors" />
+          <div>
+            <h3 className="text-xl font-black uppercase text-white mb-2">
+              Privacy
+            </h3>
+            <p className="text-sm font-mono text-gray-500">
+              End-to-end encryption for your credentials. We prioritize your
+              security above everything.
             </p>
-            <h2 className="text-4xl md:text-5xl font-black text-white">
-              100<span className="text-[#DFFF00] text-2xl">%</span>
-            </h2>
           </div>
         </div>
       </div>

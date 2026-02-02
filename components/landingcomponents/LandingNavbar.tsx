@@ -1,35 +1,48 @@
 "use client";
 import Link from "next/link";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid,CircleSlash2 } from "lucide-react";
 import { useAuthStore } from "@/lib/zustand/AuthStore";
 
 export default function LandingNavbar({ user }: any) {
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/10">
-      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full border-b border-white/20 bg-[#0a0a0a]">
+      <div className="mx-auto flex h-20 max-w-[1920px] items-center justify-between px-6 md:px-12">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="bg-[#DFFF00] p-1.5 rounded-sm group-hover:bg-[#b0cc00] transition-colors">
-            <LayoutGrid size={24} className="text-black" />
+          <div className="border border-[#DFFF00] p-1 shadow-[4px_4px_0px_#fff] transition-transform group-hover:translate-x-1 group-hover:translate-y-1 group-hover:shadow-none">
+            <CircleSlash2 size={24} className="text-[#DFFF00]" />
           </div>
-          <span className="text-white font-black text-xl tracking-tighter">
-            SHARE_NET<span className="text-[#DFFF00] ">.V2</span>
+          <span className="text-white font-black text-2xl uppercase tracking-tighter">
+            Divvy<span className="text-[#DFFF00]">.Up</span>
           </span>
         </Link>
+
+        {/* Desktop Links (Optional - added for completeness based on ref) */}
+        <div className="hidden md:flex gap-8">
+          {["Features", "Pricing", "About"].map((item) => (
+            <Link
+              key={item}
+              href="#"
+              className="text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-[#DFFF00] transition-colors"
+            >
+              {item}
+            </Link>
+          ))}
+        </div>
 
         {/* CTA */}
         <div>
           {user?.email && user?.role === "authenticated" ? (
             <Link
               href="/console"
-              className="bg-white hover:bg-[#DFFF00] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-sm transition-all border-2 border-transparent hover:border-black"
+              className="bg-white hover:bg-[#DFFF00] text-black font-black text-xs uppercase tracking-widest px-8 py-3 transition-colors border-2 border-transparent hover:border-black"
             >
-              Enter
+              Enter Console
             </Link>
           ) : (
             <Link
               href="/signin"
-              className="bg-white hover:bg-[#DFFF00] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-sm transition-all border-2 border-transparent hover:border-black"
+              className="border-2 border-white bg-transparent hover:bg-white hover:text-black text-white font-black text-xs uppercase tracking-widest px-8 py-3 transition-all"
             >
               Login
             </Link>
