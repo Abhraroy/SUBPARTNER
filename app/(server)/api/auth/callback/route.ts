@@ -42,11 +42,11 @@ export async function GET(request: Request) {
           console.log(newProfileError)
           return NextResponse.redirect(`${origin}/signin`)
         }
-        redirectPath = '/console/onboarding'
+        redirectPath = '/onboarding'
       }
 
       if(profile?.first_time){
-        redirectPath = '/console/onboarding'
+        redirectPath = '/onboarding'
       }
 
 
